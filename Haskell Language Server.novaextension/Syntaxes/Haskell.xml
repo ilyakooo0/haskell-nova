@@ -87,9 +87,8 @@
       <include syntax="self" collection="lambda-case" />
       <include syntax="self" collection="lambda-head" />
       <include syntax="self" collection="type-applications" />
-      <include syntax="self" collection="case-expression" />
+      <include syntax="self" collection="outer-case-expression" />
       <include syntax="self" collection="qvarid" />
-      <include syntax="self" collection="bind-arrow" />
       <include syntax="self" collection="tuple" />
 
 
@@ -100,13 +99,13 @@
 
     <collection name="pattern-match">
       <include syntax="self" collection="literal" />
-      <include syntax="self" collection="view-pattern" />
       <include syntax="self" collection="tuple-match" />
-<!--       <include syntax="self" collection="at-pattern" /> -->
+      <!--       <include syntax="self" collection="at-pattern" /> -->
       <include syntax="self" collection="varid" />
       <include syntax="self" collection="qconid" />
       <include syntax="self" collection="record-match" />
       <include syntax="self" collection="list-pattern" />
+      <include syntax="self" collection="view-pattern" />
     </collection>
 
     <collection name="type-applications">
@@ -285,8 +284,50 @@
           <expression>(of)</expression>
           <capture number="1" name="haskell.case.keyword.condition" />
         </ends-with>
+        <subscopes anchored="true">
+          <include syntax="self" collection="pattern-match" />
+        </subscopes>
+      </scope>
+    </collection>
+
+    <collection name="case-match">
+      <scope name="case-match">
+        <starts-with>
+          <expression>(?=((\h*)\S.*-&gt;($|\h)))</expression>
+        </starts-with>
+        <ends-with>
+          <expression>-&gt;</expression>
+        </ends-with>
+        <subscopes anchored="true">
+          <include syntax="self" collection="pattern-match" />
+        </subscopes>
+      </scope>
+    </collection>
+
+    <collection name="inner-case-expressions">
+      <scope name="inner-case-expressions">
+        <starts-with>
+          <expression>(?=((\h*)\S.*-&gt;($|\h)))</expression>
+        </starts-with>
+        <ends-with>
+          <template>^(?!\1)(?!\2\h)(?!\s*$)</template>
+        </ends-with>
         <subscopes>
-          <include syntax="self" collection="expressions" />
+          <include syntax="self" collection="case-match" />
+          <include syntax="self" collection="expressions"/>
+        </subscopes>
+      </scope>
+    </collection>
+
+    <collection name="outer-case-expression">
+      <scope name="outer-case-expression">
+        <starts-with>
+          <expression>(?=case)</expression>
+        </starts-with>
+        <ends-with />
+        <subscopes anchored="true" skip-whitespace="false">
+          <include syntax="self" collection="case-expression" />
+          <include syntax="self" collection="inner-case-expressions" repeat="true" />
         </subscopes>
       </scope>
     </collection>
@@ -397,17 +438,35 @@
     <collection name="do-bind">
       <scope name="do-bind">
         <starts-with>
-          <expression>^(?=(\h*).+&lt;-($|\h))</expression>
+          <expression>^(?=((\h*)\S.+&lt;-($|\h)))</expression>
         </starts-with>
         <ends-with>
-          <template>^(?!\0)(?!\s+\1\S)(?!\s*$)</template>
+          <template>^(?!\1)(?!\2\h)(?!\s*$)</template>
         </ends-with>
-        <subscopes anchored="true">
+        <subscopes>
+          <include syntax="self" collection="do-pattern" />
+          <include syntax="self" collection="expressions" />
+          <!--          <scope name="bind-arrow">
+            <expression>&lt;-</expression>
+          </scope> -->
+        </subscopes>
+      </scope>
+    </collection>
+
+    <collection name="do-pattern">
+      <scope name="do-pattern">
+        <starts-with>
+          <expression>^(?=((\h*)\S.+&lt;-($|\h)))</expression>
+        </starts-with>
+        <ends-with>
+          <expression>&lt;-</expression>
+        </ends-with>
+        <subscopes>
           <include syntax="self" collection="pattern-match" />
-          <scope name="bind-arrow">
+          <!--          <scope name="bind-arrow">
             <expression>&lt;-</expression>
           </scope>
-          <include syntax="self" collection="expressions" repeat="true" />
+          <include syntax="self" collection="expressions" repeat="true" /> -->
         </subscopes>
       </scope>
     </collection>
