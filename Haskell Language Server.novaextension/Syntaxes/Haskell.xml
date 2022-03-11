@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <syntax name="haskell">
   <meta>
-  <name>Haskell</name>
-  <type>compiled</type>
-  <preferred-file-extension>hs</preferred-file-extension>
+    <name>Haskell</name>
+    <type>compiled</type>
+    <preferred-file-extension>hs</preferred-file-extension>
   </meta>
 
   <detectors>
@@ -41,7 +41,7 @@
   <indentation>
     <increase>
       <expression>
-        (case|class|do|let|where).*
+        (case|class|do|let|where|=).*
       </expression>
     </increase>
     <decrease>
@@ -90,7 +90,6 @@
       <include syntax="self" collection="outer-case-expression" />
       <include syntax="self" collection="qvarid" />
       <include syntax="self" collection="tuple" />
-
 
 
       <!-- Needed for do binds -->
@@ -314,7 +313,7 @@
         </ends-with>
         <subscopes>
           <include syntax="self" collection="case-match" />
-          <include syntax="self" collection="expressions"/>
+          <include syntax="self" collection="expressions" />
         </subscopes>
       </scope>
     </collection>
@@ -746,8 +745,11 @@
 
     <collection name="module">
       <scope name="haskell.definition.module.package">
+        <symbol type="package">
+          <context behavior="subtree" foldable="true" export-local="true" />
+        </symbol>
         <starts-with>
-          <expression>^(module)\s+(\w|\.)+</expression>
+          <expression>^(module)\s+((\w|\.)+)</expression>
           <capture number="1" name="haskell.construct.keyword.module" />
           <capture number="2" name="haskell.definition.module.package" />
         </starts-with>
@@ -755,32 +757,72 @@
           <expression>(where)</expression>
           <capture number="1" name="haskell.construct.keyword.module" />
         </ends-with>
-        <subscopes export-symbols="true">
-          <scope name="identifier.constant">
+        <subscopes>
+          <scope name="identifier.haskell.type">
+            <symbol type="expression" />
+            <expression>([A-Z](\w|')*)\h*(\(\h*\.\.\h*\))?</expression>
+            <capture number="1" name="identifier.type" />
+          </scope>
+          <scope name="identifier.variable">
+            <symbol type="expression" />
             <expression>(\w|')+</expression>
+            <capture number="0" name="identifier.haskell.function" />
           </scope>
         </subscopes>
       </scope>
     </collection>
 
     <collection name="import">
-      <scope name="haskell.construct.keyword.import">
-        <expression>^import\s</expression>
+      <scope name="haskell.construct.import">
+        <starts-with>
+          <expression>^(import)\s</expression>
+          <capture number="1" name="haskell.construct.keyword.import" />
+        </starts-with>
+        <ends-with>
+          <expression>(?=^\S)</expression>
+        </ends-with>
+        <subscopes>
+          <scope name="haskell.construct.qualified">
+            <expression>qualified</expression>
+            <capture number="0" name="haskell.construct.keyword.qualified" />
+          </scope>
+
+          <scope name="haskell.construct.hiding">
+            <symbol type="keyword">
+              <context behavior="subtree" />
+            </symbol>
+            <starts-with>
+              <expression>(hiding)\h*(?=\()</expression>
+              <capture number="1" name="haskell.construct.keyword.hiding" />
+            </starts-with>
+            <ends-with>
+              <expression>(?=\))</expression>
+            </ends-with>
+            <subscopes anchored="true">
+              <include syntax="self" collection="import-list" />
+            </subscopes>
+          </scope>
+
+          <scope name="haskell.construct.keyword.as">
+            <symbol type="package" />
+            <expression>as(\h+([A-Z]\w*))?</expression>
+            <capture number="2" name="haskell.package.qualified.name" />
+          </scope>
+          <scope name="haskell.identifier.module.package">
+            <symbol type="package" />
+            <expression>([A-Z](\w|')*\.)*[A-Z](\w|')*</expression>
+            <capture number="0" name="haskell.package.name" />
+          </scope>
+          <include syntax="self" collection="import-list" />
+        </subscopes>
       </scope>
-      <scope name="haskell.construct.keyword.qualified">
-        <expression>qualified</expression>
-      </scope>
-      <scope name="haskell.construct.keyword.as">
-        <expression>as</expression>
-      </scope>
-      <scope name="haskell.identifier.module.package">
-        <expression>([A-Z](\w|')*\.)*[A-Z](\w|')*</expression>
-      </scope>
-      <include syntax="self" collection="import-list" />
     </collection>
 
     <collection name="import-list">
       <scope name="import-list">
+        <symbol>
+          <context behavior="subtree" export-local="true" />
+        </symbol>
         <starts-with>
           <expression>(\()</expression>
           <capture number="1" name="haskell.import-list.bracket" />
@@ -790,8 +832,15 @@
           <capture number="1" name="haskell.import-list.bracket" />
         </ends-with>
         <subscopes>
-          <scope name="identifier.decorator">
-            <expression>([A-Z](\w|')*\.)*\w(\w|')*</expression>
+          <scope name="haskell.identifier.struct">
+            <symbol type="reference" scope="local" />
+            <expression>([A-Z](\w|')*)\h*(\(\h*\.\.\h*\))?</expression>
+            <capture number="1" name="haskell.import-list.identifier.type.name" />
+          </scope>
+          <scope name="haskell.identifier.function">
+            <symbol type="reference" scope="local" />
+            <expression>(\w|')+</expression>
+            <capture number="0" name="haskell.import-list.function.name" />
           </scope>
         </subscopes>
       </scope>

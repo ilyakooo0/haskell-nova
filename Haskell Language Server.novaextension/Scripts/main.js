@@ -23,7 +23,7 @@ exports.activate = function () {
     startServer();
   });
   nova.commands.register("format", formatFile);
-  // startServer();
+  startServer();
 };
 exports.deactivate = function () {
   // Clean up state before the extension is deactivated
