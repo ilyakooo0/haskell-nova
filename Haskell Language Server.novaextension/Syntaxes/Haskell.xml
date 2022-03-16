@@ -434,10 +434,7 @@
         <ends-with>
           <template>^(?!\s+\1\S)(?!\s*$)</template>
         </ends-with>
-        <subscopes anchored="true">
-          <scope name="haskell.identifier.type-family.type.name">
-            <expression>\S+</expression>
-          </scope>
+        <subscopes>
           <include syntax="self" collection="type" optional="true" repeat="true" />
           <scope>
             <expression>=</expression>
