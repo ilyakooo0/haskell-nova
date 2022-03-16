@@ -393,20 +393,56 @@
     </collection>
 
     <collection name="type-family-definition">
-      <scope name="haskell.definition.type.type-family">
-        <symbol type="type" />
+      <scope name="haskell.definition.type-family.type">
+        <symbol type="type">
+          <context behavior="subtree" foldable="false" />
+        </symbol>
         <starts-with>
-          <expression>^(\h*)(type\h+family)\h+`?(\w(\w|')*)`?($|\h)</expression>
+          <expression>^(\h*)(type\h+family)</expression>
           <capture number="2" name="haskell.keyword.construct.type-family" />
         </starts-with>
         <ends-with>
           <template>^(?!\s+\1\S)(?!\s*$)</template>
         </ends-with>
-        <subscopes>
-          <scope name="haskell.keyword.construct.where">
-            <expression>where</expression>
+        <subscopes anchored="true" skip-whitespace="false">
+          <scope name="haskell.type-family.head">
+            <starts-with>
+              <expression></expression>
+            </starts-with>
+            <ends-with>
+              <expression>where</expression>
+              <capture number="0" name="haskell.keyword.construct.where" />
+            </ends-with>
+            <subscopes anchored="true">
+              <scope name="haskell.identifier.type-family.type.name">
+                <expression>\S+</expression>
+              </scope>
+              <include syntax="self" collection="type" repeat="true" optional="true" />
+            </subscopes>
           </scope>
-          <include syntax="self" collection="type" />
+
+          <include syntax="self" collection="type-family-case-definition" optional="true" repeat="true" />
+        </subscopes>
+      </scope>
+    </collection>
+
+    <collection name="type-family-case-definition">
+      <scope name="haskell.definition.type-family.type.case">
+        <starts-with>
+          <expression>^(\h*)(?=\S)</expression>
+        </starts-with>
+        <ends-with>
+          <template>^(?!\s+\1\S)(?!\s*$)</template>
+        </ends-with>
+        <subscopes anchored="true">
+          <scope name="haskell.identifier.type-family.type.name">
+            <expression>\S+</expression>
+          </scope>
+          <include syntax="self" collection="type" optional="true" repeat="true" />
+          <scope>
+            <expression>=</expression>
+          </scope>
+          <include syntax="self" collection="type" optional="true" repeat="true" />
         </subscopes>
       </scope>
     </collection>
@@ -594,15 +630,48 @@
     </collection>
 
     <collection name="type">
+      <scope name="haskell.type.construct.tuple">
+        <starts-with>
+          <expression>\(</expression>
+        </starts-with>
+        <ends-with>
+          <expression>\)</expression>
+        </ends-with>
+        <subscopes>
+          <scope name="haskell.construct.type.typle.comma">
+            <expression>\,</expression>
+          </scope>
+          <include syntax="self" collection="type" />
+        </subscopes>
+      </scope>
+      <scope name="haskell.type.list">
+        <starts-with>
+          <expression>'?\[</expression>
+        </starts-with>
+        <ends-with>
+          <expression>\]</expression>
+        </ends-with>
+        <subscopes>
+          <include syntax="self" collection="type" />
+        </subscopes>
+      </scope>
+      <scope name="haskell.type.star">
+        <expression>\*</expression>
+      </scope>
+      <scope name="haskell.keyword.construct.type-annotation-operator">
+        <expression>::</expression>
+      </scope>
       <include syntax="self" collection="type-list" />
-      <scope name="haskell.identifier.type">
-        <expression>([A-Z](\w|')*\.)*[A-Z](\w|')*</expression>
+      <scope>
+        <expression>(([A-Z](\w|')*\.)*)'*([A-Z](\w|')*)</expression>
+        <capture number="1" name="haskell.identifier.package.module" />
+        <capture number="4" name="haskell.identifier.type" />
       </scope>
       <scope name="haskell.keyword.construct.forall">
         <expression>forall</expression>
       </scope>
       <scope name="haskell.identifier.type.variable">
-        <expression>\w(\w|')*</expression>
+        <expression>(?!=)((?!(\(|\)|\,))\S)((?!(\(|\)|\,))\S)*</expression>
       </scope>
       <scope name="haskell.keyword.construct.function-arrow">
         <expression>-&gt;</expression>
@@ -688,7 +757,9 @@
 
     <collection name="qvarid">
       <scope name="haskell.identifier.function">
-        <expression>([A-Z](\w|')*\.)*\w(\w|')*</expression>
+        <expression>(([A-Z](\w|')*\.)*)(\w(\w|')*)</expression>
+        <capture number="1" name="haskell.identifier.package.module" />
+        <capture number="4" name="haskell.identifier.type" />
       </scope>
     </collection>
 
