@@ -79,6 +79,9 @@
     </collection>
 
     <collection name="expressions">
+      <scope>
+        <expression></expression>
+      </scope>
       <include syntax="self" collection="do-bind" />
       <include syntax="self" collection="literal" />
       <include syntax="self" collection="operators" />
@@ -310,7 +313,7 @@
         <ends-with>
           <template>^(?!\1)(?!\2\h)(?!\s*$)</template>
         </ends-with>
-        <subscopes>
+        <subscopes anchored="true" skip-whitespace="false">
           <include syntax="self" collection="case-match" />
           <include syntax="self" collection="expressions" />
         </subscopes>
@@ -371,7 +374,9 @@
 
     <collection name="instance">
       <scope name="haskell.instance">
-        <symbol type="category" />
+        <symbol type="category">
+          <context behavior="whitespace" foldable="true" />
+        </symbol>
         <starts-with>
           <expression>^(\h*)(instance)($|\h)</expression>
           <capture number="2" name="haskell.keyword.construct.instance" />
@@ -379,21 +384,32 @@
         <ends-with>
           <template>^(?!\s+\1\S)(?!\s*$)</template>
         </ends-with>
-        <subscopes>
-          <scope name="haskell.keyword.construct.where">
-            <expression>where</expression>
+        <subscopes anchored="true" skip-whitespace="false">
+          <scope name="haskell.construct.instance.head">
+            <starts-with>
+              <expression></expression>
+            </starts-with>
+            <ends-with>
+              <expression>where</expression>
+              <capture number="0" name="haskell.keyword.construct.where" />
+            </ends-with>
+            <subscopes>
+              <include syntax="self" collection="type" optional="true" repeat="true" />
+            </subscopes>
           </scope>
-          <include syntax="self" collection="type" />
-          <include syntax="self" collection="type-definition" />
-          <include syntax="self" collection="type-annotation" />
-          <include syntax="self" collection="definition" />
+          <include syntax="self" collection="instance-body" />
         </subscopes>
       </scope>
     </collection>
 
+    <collection name="instance-body">
+      <include syntax="self" collection="definition" />
+      <include syntax="self" collection="type-definition" />
+    </collection>
+
     <collection name="type-family-definition">
       <scope name="haskell.definition.type-family.type">
-        <symbol type="type">
+        <symbol type="type" scope="global">
           <context behavior="subtree" foldable="false" />
         </symbol>
         <starts-with>
@@ -445,16 +461,13 @@
 
     <collection name="definition">
       <scope name="haskell.definition.type.function">
-        <symbol type="function">
-          <display-name>
-            <component selector="haskell.definition.type.function" />
-          </display-name>
-
+        <symbol type="function" scope="local">
+          <context behavior="whitespace" foldable="true" />
         </symbol>
         <starts-with>
           <expression>^(?=(\h*)(default\h+)?`?(\w(\w|')*)`?($|\h))</expression>
           <capture number="2" name="haskell.keyword.construct.default" />
-          <capture number="3" name="haskell.identifier.function" />
+          <capture number="3" name="haskell.identifier.function.name" />
         </starts-with>
         <ends-with>
           <template>^(?!\1\3\s)(?!\s+\1\S)(?!\s*$)</template>
@@ -468,6 +481,9 @@
 
     <collection name="do-bind">
       <scope name="do-bind">
+        <symbol>
+          <context behavior="whitespace"></context>
+        </symbol>
         <starts-with>
           <expression>^(?=((\h*)\S.+&lt;-($|\h)))</expression>
         </starts-with>
@@ -504,7 +520,6 @@
 
     <collection name="implementation">
       <scope name="haskell.definition.type.function">
-        <local scope="within-construct" />
         <starts-with>
           <expression>^(\h*)(default\h+)?`?(\w(\w|')*)`?($|\h)</expression>
           <capture number="2" name="haskell.keyword.construct.default" />
@@ -513,9 +528,14 @@
         <ends-with>
           <template>^(?!\1\3\s)(?!\s+\1\S)(?!\s*$)</template>
         </ends-with>
-        <subscopes>
-          <include syntax="self" collection="where-clause" />
-          <include syntax="self" collection="expressions" />
+        <subscopes anchored="true">
+          <include syntax="self" collection="pattern-match" optional="true" repeat="true" />
+          <scope>
+            <expression>=</expression>
+            <capture number="0" name="haskell.construct.function.keyword.eq" />
+          </scope>
+          <include syntax="self" collection="expressions" optional="true" repeat="true" />
+          <include syntax="self" collection="where-clause" optional="true" />
         </subscopes>
       </scope>
     </collection>
@@ -537,10 +557,13 @@
 
     <collection name="type-definition">
       <scope name="haskell.definition.type">
+        <symbol type="type" scope="global">
+          <context behavior="whitespace" foldable="true" />
+        </symbol>
         <starts-with>
           <expression>^(\h*)(type)\h+(\w(\w|')*)</expression>
           <capture number="2" name="haskell.keyword.construct.type" />
-          <capture number="3" name="haskell.identifier.type" />
+          <capture number="3" name="haskell.identifier.type.name" />
         </starts-with>
         <ends-with>
           <template>^(?!\s+\1\S)(?!\s*$)</template>
@@ -553,7 +576,7 @@
 
     <collection name="GADT-definition">
       <scope name="haskell.definition.struct.GADT">
-        <symbol type="struct">
+        <symbol type="struct" scope="global">
           <context behavior="subtree" foldable="false" />
         </symbol>
         <starts-with>
@@ -594,7 +617,7 @@
 
     <collection name="deriving-clause">
       <scope name="haskell.record.construct.deriving.keyword">
-        <expression>deriving\h+(newtype|stock|anyclass)</expression>
+        <expression>deriving(\h+(newtype|stock|anyclass))?</expression>
       </scope>
     </collection>
 
@@ -628,6 +651,13 @@
     </collection>
 
     <collection name="type">
+      <scope name="haskell.keyword.construct.function-arrow">
+        <expression>-&gt;</expression>
+      </scope>
+      <scope name="haskell.keyword.construct.fat-arrow">
+        <expression>=&gt;</expression>
+      </scope>
+      <include syntax="self" collection="strings" />
       <scope name="haskell.type.construct.tuple">
         <starts-with>
           <expression>\(</expression>
@@ -661,7 +691,7 @@
       </scope>
       <include syntax="self" collection="type-list" />
       <scope>
-        <expression>(([A-Z](\w|')*\.)*)'*([A-Z](\w|')*)</expression>
+        <expression>(([A-Z](\w|')*\.)*)'*\!?([A-Z](\w|')*)</expression>
         <capture number="1" name="haskell.identifier.package.module" />
         <capture number="4" name="haskell.identifier.type" />
       </scope>
@@ -669,13 +699,7 @@
         <expression>forall</expression>
       </scope>
       <scope name="haskell.identifier.type.variable">
-        <expression>(?!=)((?!(\(|\)|\,))\S)((?!(\(|\)|\,))\S)*</expression>
-      </scope>
-      <scope name="haskell.keyword.construct.function-arrow">
-        <expression>-&gt;</expression>
-      </scope>
-      <scope name="haskell.keyword.construct.fat-arrow">
-        <expression>=&gt;</expression>
+        <expression>(?!where)(?!=)((?!(\(|\)|\,|\!))\S)((?!(\(|\)|\,))\S)*</expression>
       </scope>
     </collection>
 
@@ -738,7 +762,6 @@
 
     <collection name="where-clause">
       <scope name="haskell.construct.where">
-        <local scope="within-parent" />
         <starts-with>
           <expression>^(\h*)(where)</expression>
           <capture number="2" name="haskell.construct.keyword.where" />
