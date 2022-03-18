@@ -79,34 +79,19 @@
     </collection>
 
     <collection name="expressions">
-      <scope>
-        <expression></expression>
-      </scope>
       <include syntax="self" collection="do-bind" />
       <include syntax="self" collection="literal" />
       <include syntax="self" collection="operators" />
+      <include syntax="self" collection="record-match" />
       <include syntax="self" collection="list" />
+      <include syntax="self" collection="view-pattern" />
       <include syntax="self" collection="lambda-case" />
       <include syntax="self" collection="lambda-head" />
       <include syntax="self" collection="type-applications" />
       <include syntax="self" collection="outer-case-expression" />
+      <include syntax="self" collection="qconid" />
       <include syntax="self" collection="qvarid" />
       <include syntax="self" collection="tuple" />
-
-
-      <!-- Needed for do binds -->
-      <!--       <include syntax="self" collection="pattern-match" /> -->
-    </collection>
-
-    <collection name="pattern-match">
-      <include syntax="self" collection="literal" />
-      <include syntax="self" collection="tuple-match" />
-      <!--       <include syntax="self" collection="at-pattern" /> -->
-      <include syntax="self" collection="varid" />
-      <include syntax="self" collection="qconid" />
-      <include syntax="self" collection="record-match" />
-      <include syntax="self" collection="list-pattern" />
-      <include syntax="self" collection="view-pattern" />
     </collection>
 
     <collection name="type-applications">
@@ -165,8 +150,7 @@
           <capture number="1" name="haskell.pattern.record.bracket" />
         </ends-with>
         <subscopes>
-          <include syntax="self" collection="pattern-match" />
-          <include syntax="self" collection="varid" />
+          <include syntax="self" collection="expressions" />
           <scope name="record-sep">
             <expression>=</expression>
           </scope>
@@ -219,24 +203,6 @@
       </scope>
     </collection>
 
-    <collection name="list-pattern">
-      <symbol type="expression" />
-      <scope name="haskell.pattern.list">
-        <starts-with>
-          <expression>(\[)</expression>
-          <capture number="1" name="haskell.pattern.list.bracket" />
-        </starts-with>
-        <ends-with>
-          <expression>(\])</expression>
-          <capture number="1" name="haskell.pattern.list.bracket" />
-        </ends-with>
-        <subscopes>
-          <include syntax="self" collection="pattern-match" />
-        </subscopes>
-      </scope>
-    </collection>
-
-
     <collection name="view-pattern">
       <scope name="haskell.pattern.view">
         <symbol type="expression" />
@@ -253,24 +219,7 @@
           <scope name="haskell.pattern.view.operator.arrow">
             <expression>-&gt;</expression>
           </scope>
-          <include syntax="self" collection="pattern-match" />
-        </subscopes>
-      </scope>
-    </collection>
-
-    <collection name="tuple-match">
-      <symbol type="expression" />
-      <scope name="haskell.pattern.tuple">
-        <starts-with>
-          <expression>(\()</expression>
-          <capture number="1" name="haskell.pattern.tuple.bracket" />
-        </starts-with>
-        <ends-with>
-          <expression>(\))</expression>
-          <capture number="1" name="haskell.pattern.tuple.bracket" />
-        </ends-with>
-        <subscopes>
-          <include syntax="self" collection="pattern-match" />
+          <include syntax="self" collection="expressions" />
         </subscopes>
       </scope>
     </collection>
@@ -286,7 +235,7 @@
           <capture number="1" name="haskell.case.keyword.condition" />
         </ends-with>
         <subscopes anchored="true">
-          <include syntax="self" collection="pattern-match" />
+          <include syntax="self" collection="expressions" />
         </subscopes>
       </scope>
     </collection>
@@ -300,7 +249,7 @@
           <expression>-&gt;</expression>
         </ends-with>
         <subscopes anchored="true">
-          <include syntax="self" collection="pattern-match" />
+          <include syntax="self" collection="expressions" />
         </subscopes>
       </scope>
     </collection>
@@ -500,24 +449,6 @@
       </scope>
     </collection>
 
-    <collection name="do-pattern">
-      <scope name="do-pattern">
-        <starts-with>
-          <expression>^(?=((\h*)\S.+&lt;-($|\h)))</expression>
-        </starts-with>
-        <ends-with>
-          <expression>&lt;-</expression>
-        </ends-with>
-        <subscopes>
-          <include syntax="self" collection="pattern-match" />
-          <!--          <scope name="bind-arrow">
-            <expression>&lt;-</expression>
-          </scope>
-          <include syntax="self" collection="expressions" repeat="true" /> -->
-        </subscopes>
-      </scope>
-    </collection>
-
     <collection name="implementation">
       <scope name="haskell.definition.type.function">
         <starts-with>
@@ -528,7 +459,7 @@
         <ends-with>
           <template>^(?!\1\3\s)(?!\s+\1\S)(?!\s*$)</template>
         </ends-with>
-        <subscopes anchored="true">
+        <subscopes>
           <include syntax="self" collection="pattern-match" optional="true" repeat="true" />
           <scope>
             <expression>=</expression>
@@ -619,6 +550,9 @@
       <scope name="haskell.record.construct.deriving.keyword">
         <expression>deriving(\h+(newtype|stock|anyclass))?</expression>
       </scope>
+      <scope name="haskell.record.construct.deriving.keyword">
+        <expression>via</expression>
+      </scope>
     </collection>
 
     <collection name="record-definition">
@@ -699,7 +633,7 @@
         <expression>forall</expression>
       </scope>
       <scope name="haskell.identifier.type.variable">
-        <expression>(?!where)(?!=)((?!(\(|\)|\,|\!))\S)((?!(\(|\)|\,))\S)*</expression>
+        <expression>(?!where)(?!=)((?!(\(|\)|\,|\!))\S)((?!(\(|\)|\,))\w)*</expression>
       </scope>
     </collection>
 
