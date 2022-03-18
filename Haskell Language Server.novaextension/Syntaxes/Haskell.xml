@@ -78,6 +78,9 @@
     </collection>
 
     <collection name="expressions">
+      <scope name="haskell.construct.keyword.at">
+        <expression>@</expression>
+      </scope>
       <scope name="haskell.construct.keyword.case-arrow">
         <expression>-&gt;</expression>
       </scope>
@@ -92,31 +95,10 @@
       <include syntax="self" collection="view-pattern" />
       <include syntax="self" collection="lambda-case" />
       <include syntax="self" collection="lambda-head" />
-      <include syntax="self" collection="type-applications" />
       <include syntax="self" collection="case-expression" />
       <include syntax="self" collection="qconid" />
       <include syntax="self" collection="qvarid" />
       <include syntax="self" collection="tuple" />
-    </collection>
-
-    <collection name="type-applications">
-      <scope name="type-applications">
-        <starts-with>
-          <expression>(\s@)\(</expression>
-          <capture number="1" name="haskell.keyword.operator.typeapplication" />
-        </starts-with>
-        <ends-with>
-          <expression>)</expression>
-        </ends-with>
-        <subscopes>
-          <include syntax="self" collection="type" />
-        </subscopes>
-      </scope>
-      <scope name="type-applications-single">
-        <expression>(@)(\w+)</expression>
-        <capture number="1" name="haskell.keyword.operator.typeapplication" />
-        <capture number="2" name="haskell.identifier.type" />
-      </scope>
     </collection>
 
     <collection name="Quote">
@@ -861,6 +843,7 @@
         <strings>
           <string>undefined</string>
           <string>_</string>
+          <string>@</string>
         </strings>
       </scope>
     </collection>
