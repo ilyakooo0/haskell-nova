@@ -128,7 +128,7 @@ async function getGHCVersion() {
             sendPermanentNotification(
               tool + " not installed!",
               "Please install " + tool +
-                " and restart Haskell Language Server.",
+              " and restart Haskell Language Server.",
             );
           } else {
             sendPermanentNotification("Couldn't detect GHC version", x);
@@ -141,7 +141,24 @@ async function getGHCVersion() {
   return promise;
 }
 async function getHLS() {
+  const explicitPath = nova.workspace.config.get("haskell-language-server-path")
+  if (explicitPath) {
+    sendNotification("HLS path specified in settings", "Using the path to haskell-language-server specified in settings.")
+    return explicitPath
+  }
+
   const version = await getGHCVersion();
+  const localHLSPath = await which("haskell-language-server").catch((_) => null)
+  if (localHLSPath) {
+    sendNotification("Found HLS", "Found haskell-language-server in PATH. Checking if it is the right version.")
+    const v = await getHLSVersion(localHLSPath)
+    if (v === version) {
+      sendNotification("Using local HLS", "The haskell-language-server in PATH has the right version. Using it.")
+      return localHLSPath
+    } else {
+      sendNotification("Not using local HLS", "The haskell-language-server in PATH is built fot GHC " + v + " but we need GHC " + version + ". Trying other alternatives.")
+    }
+  }
   return await getTool(version);
 }
 
@@ -155,4 +172,38 @@ function getToolName(name) {
 
 function notifyToolDownloading(name) {
   sendNotification("Downloading tool", "Downloading " + getToolName(name));
+}
+
+function getHLSVersion(path) {
+  return call(new Process(path, {
+      args: ["--version"],
+    }))
+    .then((x) => x.match(/\(GHC: (\S+)\)/)[1].trim())
+    .catch((err) => sendPermanentNotification("HLS version check failed", err))
+}
+
+function which(name) {
+  return call(new Process("/usr/bin/which", {
+    args: [name],
+    shell: true,
+  })).then((p) => p.trim())
+}
+
+function call(process) {
+  const promise = new Promise((resolve, reject) => {
+    process.onDidExit((exitCode) => {
+      console.log(exitCode)
+      if (exitCode == 0) {
+        readStream(process.stdout).then((x) => {
+          resolve(x);
+        });
+      } else {
+        readStream(process.stderr).then((x) => {
+          reject(x)
+        });
+      }
+    });
+  })
+  process.start()
+  return promise
 }
