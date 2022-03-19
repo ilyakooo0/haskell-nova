@@ -456,15 +456,16 @@
     <collection name="gadt-constructor">
       <scope name="haskell.identifier.type.struct.data.constructor">
         <symbol type="constructor">
-          <context behavior="whitespace" />
+          <context behavior="subtree" foldable="true" />
         </symbol>
-        <expression>(^|=|\|)\h+([A-Z](\w|')*)</expression>
-        <capture number="2" name="haskell.identifier.data.name" />
-      </scope>
-      <scope name="identifier.type.struct.GADT.constructor">
-        <symbol type="constructor"></symbol>
-        <expression>^\h+([A-Z](\w|')*)</expression>
-        <capture number="1" name="haskell.identifier.data.name" />
+        <starts-with>
+          <expression>(^|=|\||^)\h+([A-Z](\w|')*)</expression>
+          <capture number="2" name="haskell.identifier.data.name" />
+        </starts-with>
+        <ends-with />
+        <subscopes anchored="true">
+          <include syntax="self" collection="record-definition" />
+        </subscopes>
       </scope>
     </collection>
 
