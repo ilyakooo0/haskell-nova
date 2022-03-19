@@ -6,21 +6,25 @@
   "version": "1.0",
   "categories": ["languages", "formatters"],
   "main": "main.js",
-  "entitlements": {
+  "entitlements":
+  {
     "process": true,
     "filesystem": "readwrite",
     "requests": true
   },
-  "configWorkspace": [{
+  "configWorkspace": [
+  {
     "key": "haskell-language-server-path",
     "title": "Haskell Language Server path",
     "description": "If you want to use a custom HLS build for this project, then specify the path to it here.",
     "type": "path",
     "placeholder": "/usr/local/bin/example"
-  }, {
+  },
+  {
     "type": "section",
     "title": "Haskell Language Server settings",
-    "children": [{
+    "children": [
+    {
       "key": "haskell.formattingProvider",
       "title": "Code formatter",
       "type": "enum",
@@ -34,57 +38,68 @@
       ],
       "default": "ormolu",
       "description": "The formatter to use when formatting a document or range. Ensure the plugin is enabled."
-    }, {
+    },
+    {
       "key": "haskell.checkProject",
       "title": "Check whole project",
       "type": "boolean",
       "default": false,
-      "description": "Whether to typecheck the entire project on load. It could drive to bad perfomance in large projects."
-    }, {
+      "description": "Whether to typecheck the entire project on load. It could lead to bad perfomance in large projects."
+    },
+    {
       "key": "haskell.maxCompletions",
       "type": "number",
       "title": "Maximum number of completions",
       "description": "Maximum number of completions sent to the editor.",
       "default": 40
-    }, {
+    },
+    {
       "type": "section",
       "title": "Plugin settings",
-      "children": [{
+      "children": [
+      {
         "type": "section",
         "title": "Import lens",
         "description": "Not currently implemented in Nova",
-        "children": [{
+        "children": [
+        {
           "key": "haskell.plugin.importLens.codeActionsOn",
           "title": "Enable code actions",
           "type": "boolean",
           "default": true,
           "description": "Enables explicit imports code actions"
-        }, {
+        },
+        {
           "key": "haskell.plugin.importLens.codeLensOn",
           "title": "Enable code lens",
           "type": "boolean",
           "default": true,
           "description": "Enables explicit imports code lenses"
         }]
-      }, {
+      },
+      {
         "title": "HLint",
         "type": "section",
-        "children": [{
+        "children": [
+        {
           "key": "haskell.plugin.hlint.codeActionsOn",
           "title": "Enable code actions",
           "type": "boolean",
           "default": true,
           "description": "Enables hlint code actions (apply hints)"
-        }, {
+        },
+        {
           "key": "haskell.plugin.hlint.diagnosticsOn",
           "title": "Enable diagnostics",
           "type": "boolean",
           "default": true,
           "description": "Enables hlint diagnostics"
-        }, {
+        },
+        {
           "title": "Configuration",
           "type": "section",
-          "children": [{
+          "children": [
+          {
             "key": "haskell.plugin.hlint.config.flags",
             "title": "Flags",
             "description": "Flags used by hlint",
@@ -92,85 +107,102 @@
             "type": "stringArray"
           }]
         }]
-      }, {
+      },
+      {
         "title": "Eval",
         "type": "section",
-        "children": [{
+        "children": [
+        {
           "key": "haskell.plugin.eval.globalOn",
           "title": "Enable",
           "type": "boolean",
           "default": true,
           "description": "Enables eval plugin"
         }]
-      }, {
+      },
+      {
         "title": "Module name",
         "type": "section",
-        "children": [{
+        "children": [
+        {
           "key": "haskell.plugin.moduleName.globalOn",
           "title": "Enable",
           "type": "boolean",
           "default": true,
           "description": "Enables module name plugin"
         }]
-      }, {
+      },
+      {
         "title": "Splice",
         "type": "section",
-        "children": [{
+        "children": [
+        {
           "key": "haskell.plugin.splice.globalOn",
           "title": "Enable",
           "type": "boolean",
           "default": true,
           "description": "Enables splice plugin (expand template haskell definitions)"
         }]
-      }, {
+      },
+      {
         "title": "Haddock comments",
         "type": "section",
-        "children": [{
+        "children": [
+        {
           "key": "haskell.plugin.haddockComments.globalOn",
           "title": "Enable",
           "type": "boolean",
           "default": true,
           "description": "Enables haddock comments plugin"
         }]
-      }, {
+      },
+      {
         "title": "Class",
         "type": "section",
-        "children": [{
+        "children": [
+        {
           "key": "haskell.plugin.class.globalOn",
           "title": "Enable",
           "type": "boolean",
           "default": true,
           "description": "Enables type class plugin"
         }]
-      }, {
+      },
+      {
         "title": "Retrie",
         "type": "section",
-        "children": [{
+        "children": [
+        {
           "key": "haskell.plugin.retrie.globalOn",
           "title": "Enable",
           "type": "boolean",
           "default": true,
           "description": "Enables retrie plugin"
         }]
-      }, {
+      },
+      {
         "title": "Wingman",
         "type": "section",
-        "children": [{
+        "children": [
+        {
           "key": "haskell.plugin.tactics.globalOn",
           "title": "Enable",
           "type": "boolean",
           "default": true,
           "description": "Enables Wingman (tactics) plugin"
-        }, {
+        },
+        {
           "title": "Configuration",
           "type": "section",
-          "children": [{
+          "children": [
+          {
             "key": "haskell.plugin.tactics.config.auto_gas",
             "title": "Gas",
             "description": "The depth of the search tree when performing \"Attempt to fill hole\". Bigger values will be able to derive more solutions, but will take exponentially more time.",
             "default": 4,
             "type": "number"
-          }, {
+          },
+          {
             "key": "haskell.plugin.tactics.config.hole_severity",
             "title": "Hole severity",
             "description": "The severity to use when showing hole diagnostics.",
@@ -183,19 +215,22 @@
             ],
             "default": null,
             "type": "enum"
-          }, {
+          },
+          {
             "key": "haskell.plugin.tactics.config.max_use_ctor_actions",
             "title": "Max number of constructors",
             "type": "number",
             "default": 5,
             "description": "Maximum number of `Use constructor <x>` code actions that can appear"
-          }, {
+          },
+          {
             "key": "haskell.plugin.tactics.config.timeout_duration",
             "title": "Timeout",
             "description": "The timeout for Wingman actions, in seconds",
             "default": 2,
             "type": "number"
-          }, {
+          },
+          {
             "key": "haskell.plugin.tactics.config.proofstate_styling",
             "title": "Proof states",
             "description": "Should Wingman emit styling markup when showing metaprogram proof states?",
@@ -203,35 +238,42 @@
             "type": "boolean"
           }]
         }]
-      }, {
+      },
+      {
         "title": "Pragmas",
         "type": "section",
-        "children": [{
+        "children": [
+        {
           "key": "haskell.plugin.pragmas.codeActionsOn",
           "title": "Enable code actions",
           "type": "boolean",
           "default": true,
           "description": "Enables pragmas code actions"
-        }, {
+        },
+        {
           "key": "haskell.plugin.pragmas.completionOn",
           "title": "Enable completions",
           "type": "boolean",
           "default": true,
           "description": "Enables pragmas completions"
         }]
-      }, {
+      },
+      {
         "title": "Completions",
         "type": "section",
-        "children": [{
+        "children": [
+        {
           "title": "Configuration",
           "type": "section",
-          "children": [{
+          "children": [
+          {
             "key": "haskell.plugin.ghcide-completions.config.autoExtendOn",
             "title": "Extend with out-of-scope identifiers",
             "description": "Extends the import list automatically when completing a out-of-scope identifier",
             "default": true,
             "type": "boolean"
-          }, {
+          },
+          {
             "key": "haskell.plugin.ghcide-completions.config.snippetsOn",
             "title": "Insert snippets",
             "description": "Inserts snippets when using code completions",
@@ -239,19 +281,23 @@
             "type": "boolean"
           }]
         }]
-      }, {
+      },
+      {
         "description": "Not currently implemented in Nova",
         "type": "section",
-        "children": [{
+        "children": [
+        {
           "key": "haskell.plugin.ghcide-type-lenses.globalOn",
           "title": "Enable",
           "type": "boolean",
           "default": true,
           "description": "Enables type lenses plugin"
-        }, {
+        },
+        {
           "title": "Configuration",
           "type": "section",
-          "children": [{
+          "children": [
+          {
             "key": "haskell.plugin.ghcide-type-lenses.config.mode",
             "title": "Mode",
             "type": "enum",
@@ -260,10 +306,12 @@
             "values": ["always", "exported", "diagnostics"]
           }]
         }]
-      }, {
+      },
+      {
         "title": "Refine imports",
         "type": "section",
-        "children": [{
+        "children": [
+        {
           "key": "haskell.plugin.refineImports.globalOn",
           "title": "Enable",
           "type": "boolean",
@@ -274,24 +322,30 @@
     }]
   }],
   "activationEvents": ["onLanguage:haskell", "onLanguage:hs"],
-  "commands": {
-    "editor": [{
+  "commands":
+  {
+    "editor": [
+    {
       "title": "Format file with Haskell Language Server",
       "command": "format",
       "when": "editorSyntax == 'haskell' && editorHasFocus",
-      "filters": {
+      "filters":
+      {
         "syntaxes": ["haskell"]
       }
     }],
-    "extensions": [{
+    "extensions": [
+    {
       "title": "Stop",
       "paletteTitle": "Stop Haskell Language Server",
       "command": "stop"
-    }, {
+    },
+    {
       "title": "Restart",
       "paletteTitle": "Restart Haskell Language Server",
       "command": "restart"
-    }, {
+    },
+    {
       "title": "Clear cached versions",
       "paletteTitle": "Clear cached versions of Haskell Language Server",
       "command": "clear-cache"
