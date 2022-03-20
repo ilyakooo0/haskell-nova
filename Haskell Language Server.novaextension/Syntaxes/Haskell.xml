@@ -65,7 +65,6 @@
 
   <template-scopes>
     <include syntax="self" collection="Quote" />
-    <include syntax="self" collection="comments" />
   </template-scopes>
 
   <collections>
@@ -137,6 +136,7 @@
           <capture number="1" name="haskell.pattern.record.bracket" />
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <include syntax="self" collection="expressions" />
           <scope name="record-sep">
             <expression>=</expression>
@@ -159,6 +159,7 @@
           <capture number="1" name="haskell.pattern.record.bracket" />
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <scope name="haskell.pattern.record.wildcard">
             <expression>\.\.</expression>
           </scope>
@@ -185,6 +186,7 @@
           <capture number="1" name="haskell.list.bracket" />
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <include syntax="self" collection="expressions" />
         </subscopes>
       </scope>
@@ -239,6 +241,7 @@
           <capture number="1" name="haskell.tuple.bracket" />
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <include syntax="self" collection="expressions" />
         </subscopes>
       </scope>
@@ -263,6 +266,7 @@
               <expression>(?=(where|^\s*$))</expression>
             </ends-with>
             <subscopes>
+              <include syntax="self" collection="comments" />
               <include syntax="self" collection="type" />
             </subscopes>
           </scope>
@@ -342,6 +346,7 @@
           <template>^(?!\s+\1\S)(?!\s*$)</template>
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <include syntax="self" collection="type" optional="true" repeat="true" />
           <scope>
             <expression>=</expression>
@@ -365,6 +370,7 @@
           <template>^(?!\1\3\s)(?!\s+\1\S)(?!\s*$)</template>
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <include syntax="self" collection="type-annotation" />
           <include syntax="self" collection="implementation" />
         </subscopes>
@@ -382,6 +388,7 @@
           <template>^(?!\1\3\s)(?!\s+\1\S)(?!\s*$)</template>
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <include syntax="self" collection="pattern-match" optional="true" repeat="true" />
           <scope>
             <expression>=</expression>
@@ -403,6 +410,7 @@
           <template>^(?!\s+\1\S)(?!\s*$)</template>
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <include syntax="self" collection="type" />
         </subscopes>
       </scope>
@@ -422,6 +430,7 @@
           <template>^(?!\s+\1\S)(?!\s*$)</template>
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <include syntax="self" collection="type" />
         </subscopes>
       </scope>
@@ -441,6 +450,7 @@
           <template>^(?!\s+\1\S)(?!\s*$)</template>
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <scope name="haskell.keyword.construct.where">
             <expression>where</expression>
           </scope>
@@ -474,6 +484,7 @@
         <expression>deriving(\h+(newtype|stock|anyclass))?</expression>
       </scope>
       <scope name="haskell.record.construct.deriving.keyword">
+        <include syntax="self" collection="comments" />
         <expression>via</expression>
       </scope>
     </collection>
@@ -492,6 +503,7 @@
           <capture number="1" name="haskell.record.bracket" />
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <include syntax="self" collection="record-definition-field-name" />
           <include syntax="self" collection="type" />
         </subscopes>
@@ -523,6 +535,7 @@
           <expression>\)</expression>
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <scope name="haskell.construct.type.typle.comma">
             <expression>\,</expression>
           </scope>
@@ -537,6 +550,7 @@
           <expression>\]</expression>
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <include syntax="self" collection="type" />
         </subscopes>
       </scope>
@@ -571,6 +585,7 @@
           <template>^(?!\s+\1\S)(?!\s*$)</template>
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <scope name="haskell.keyword.construct.where">
             <expression>where</expression>
           </scope>
@@ -590,6 +605,7 @@
           <capture number="1" name="haskell.type-list.bracket" />
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <include syntax="self" collection="type" />
         </subscopes>
       </scope>
@@ -606,6 +622,7 @@
           <capture number="1" name="haskell.keyword.construct.lambda" />
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <include syntax="self" collection="pattern-match" />
         </subscopes>
       </scope>
@@ -627,6 +644,7 @@
           <template>^(?!\1\s*\S)(?!s*$)</template>
         </ends-with>
         <subscopes>
+          <include syntax="self" collection="comments" />
           <include syntax="self" collection="definition" />
         </subscopes>
       </scope>
@@ -666,12 +684,12 @@
 
 
     <collection name="strings">
-      <scope name="haskell.string.double-quoted">
+      <scope name="haskell.string.double-quoted" spell-check="true">
         <starts-with>
-          <expression>"</expression>
+          <expression>&quot;</expression>
         </starts-with>
         <ends-with>
-          <expression>"</expression>
+          <expression>&quot;</expression>
         </ends-with>
         <subscopes>
           <scope name="haskell.string.escape-sequences">
@@ -709,6 +727,7 @@
         <subscopes>
           <scope name="identifier.haskell.type">
             <symbol type="expression" />
+            <symbol type="expression" />
             <expression>([A-Z](\w|')*)\h*(\(\h*\.\.\h*\))?</expression>
             <capture number="1" name="identifier.type" />
           </scope>
@@ -732,6 +751,7 @@
         </ends-with>
         <subscopes>
           <scope name="haskell.construct.qualified">
+            <symbol type="expression" />
             <expression>qualified</expression>
             <capture number="0" name="haskell.construct.keyword.qualified" />
           </scope>
@@ -749,6 +769,7 @@
             </ends-with>
             <subscopes anchored="true">
               <include syntax="self" collection="import-list" />
+              <symbol type="expression" />
             </subscopes>
           </scope>
 
@@ -782,6 +803,7 @@
         </ends-with>
         <subscopes>
           <scope name="haskell.identifier.struct">
+            <symbol type="expression" />
             <symbol type="reference" scope="local" />
             <expression>([A-Z](\w|')*)\h*(\(\h*\.\.\h*\))?</expression>
             <capture number="1" name="haskell.import-list.identifier.type.name" />
@@ -851,14 +873,11 @@
 
     <collection name="comments">
       <scope name="haskell.comment.single" spell-check="true">
-        <starts-with>
-          <expression>--</expression>
-        </starts-with>
-        <ends-with>
-          <expression>$</expression>
-        </ends-with>
+        <symbol type="comment" />
+        <expression> --.*$</expression>
       </scope>
       <scope name="haskell.comment.block" spell-check="true">
+        <symbol type="comment" />
         <starts-with>
           <expression>{-</expression>
         </starts-with>
