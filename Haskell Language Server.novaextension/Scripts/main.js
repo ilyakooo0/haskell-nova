@@ -9,8 +9,9 @@ const {
   getHLSConfig,
 } = require("configuration");
 const {
-  getFileName,
+  getFileName, createEnv, getEnv
 } = require("utils");
+
 exports.activate = function () {
   nova.commands.register("stop", (_workspace) => {
     stopServer();
@@ -107,10 +108,12 @@ function applyAllLSPEdits(edits, text) {
 }
 let lspClient = null;
 async function startServer() {
+  await createEnv()
   stopServer();
   const path = await getServerPath();
+  const env = await getEnv()
   const serverOptions = {
-    path: path,
+    path, env,
     args: ["lsp", "--cwd", nova.workspace.path],
   };
   const clientOptions = {
@@ -137,7 +140,3 @@ function stopServer() {
 function getServerPath() {
   return getHLS();
 }
-
-// function getLogPath() {
-//   return getStorage() + "/haskell-language-server.log";
-// }

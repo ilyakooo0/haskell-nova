@@ -5,6 +5,8 @@ const {
 const {
   readStream,
   getStorage,
+  call,
+  hasCustomEnv
 } = require("utils");
 
 exports.getHLS = getHLS;
@@ -147,8 +149,12 @@ async function getHLS() {
     return explicitPath
   }
 
-  const version = await getGHCVersion();
   const localHLSPath = await which("haskell-language-server").catch((_) => null)
+  if (hasCustomEnv() && localHLSPath) {
+    return localHLSPath
+  }
+
+  const version = await getGHCVersion();
   if (localHLSPath) {
     sendNotification("Found HLS", "Found haskell-language-server in PATH. Checking if it is the right version.")
     const v = await getHLSVersion(localHLSPath)
@@ -175,35 +181,17 @@ function notifyToolDownloading(name) {
 }
 
 function getHLSVersion(path) {
-  return call(new Process(path, {
+  return call(path, {
       args: ["--version"],
-    }))
+    })
     .then((x) => x.match(/\(GHC: (\S+)\)/)[1].trim())
     .catch((err) => sendPermanentNotification("HLS version check failed", err))
 }
 
 function which(name) {
-  return call(new Process("/usr/bin/which", {
+  return call("/usr/bin/which", {
     args: [name],
     shell: true,
-  })).then((p) => p.trim())
+  }).then((p) => p.trim())
 }
 
-function call(process) {
-  const promise = new Promise((resolve, reject) => {
-    process.onDidExit((exitCode) => {
-      console.log(exitCode)
-      if (exitCode == 0) {
-        readStream(process.stdout).then((x) => {
-          resolve(x);
-        });
-      } else {
-        readStream(process.stderr).then((x) => {
-          reject(x)
-        });
-      }
-    });
-  })
-  process.start()
-  return promise
-}

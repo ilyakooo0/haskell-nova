@@ -21,6 +21,14 @@
     "placeholder": "/usr/local/bin/example"
   },
   {
+    "key": "env-generator",
+    "title": "Environment generator",
+    "description": "You can specify a shell command which will be used to generate the environment, in which the extension will be executes. This is useful if you want to utilize `nix-shell`, `direnv` or any similar command.\n\nExpects the command to have the same stdout as the `env` command.",
+    "type": "enum",
+    "allowsCustom": true,
+    "values": ["nix-shell --run env", "direnv exec env"]
+  },
+  {
     "type": "section",
     "title": "Haskell Language Server settings",
     "description":"Some of the features are not supported in Nova. Some of them are explicitly marked as not supported, but it is not exhaustive.",
