@@ -45,6 +45,9 @@ async function downloadTool(name) {
   const storagePath = getStorageForTool(name);
   console.log("Downloading " + storagePath);
   const urls = await getHLSAssets();
+  if (!(name in urls)) {
+    sendPermanentNotification("There is no pre-built HLS for GHC " + name ,"There is no pre-built version of HLS for GHC " + name + ". You can either build HLS yourself or update your project to one of the pre-built versions: https://github.com/haskell/haskell-language-server/releases")
+  }
   const response = await fetch(urls[name]);
   if (!response.ok) {
     console.error(response.statusText);
@@ -194,4 +197,3 @@ function which(name) {
     shell: true,
   }).then((p) => p.trim())
 }
-
