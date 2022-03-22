@@ -120,6 +120,8 @@ async function createEnv() {
     const envStr = await promise
       .catch((err) => sendPermanentNotification("Generating environment failed", err))
     envCache = parseEnvs(envStr)
+  } else {
+    envCache = {}
   }
 }
 
